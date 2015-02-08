@@ -1,0 +1,4 @@
+This is a text file to get the info from git.
+
+Thanks,
+Craig
