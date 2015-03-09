@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * Implementation of hook_webform_select_options_info().
+ * See webform/webform_hooks.php for further information on this hook in the Webform API.
+ */
+function custom_webform_pre_build_list_webform_select_options_info() {
+    $items = array();
+    $items['user_bikes'] = array(
+        'title' => t('UsersBikes'),
+        'options callback' => 'custom_webform_pre_build_list_user_bikes'
+    );
+
+   return $items;
+}
+
+/**
+ * Build an options list to be used with webforms select list based in drupal roles
+ */
+function custom_webform_pre_build_list_user_bikes() {
+    $bikes = user_bikes();
+
+    $contentarray = array();
+
+    $contentarray[0] = t("Select user Bike");
+
+        #$new_taxonomies = array();
+        foreach ($bikes as $bike => $sn) {
+            # $contentarray[$bike] = t($sn);
+            $contentarray[t($sn)] = t($bike);
+        }
+
+    return $contentarray;
+}
+
+/**
+* Function to get list of user bikes
+*/
+
+
+function user_bikesX(){
+$bikelist = array("Bike1", "Bike2", "Bike3");
+return $bikelist;
+}
+
+function user_bikes(){
+/* Get a list of all submissions from webform for the node with ID (`nid`) of 1 */
+$nid = 9;
+
+global $user;
+
+// Drupal 7
+// Notice the place holders are now done using the same syntax as PDOs (:uid)
+// Placeholders also don't need to be quoted anymore.
+$uid = $user->uid;
+
+$result = db_query('select serial_number, bike_make, bike_model from webform_views_add_my_bike where uid = :uid', array(':uid' => $uid ));
+
+$bikelist = array();
+
+#$result = db_query('SELECT n.nid,n.nickname
+#FROM {node} n WHERE n.nid = :nid', array(':nid' => $nid));
+// Result is returned as a iterable object that returns a stdClass object on each iteration
+foreach ($result as $record) {
+  // Perform operations on $record->title, etc. here.
+  // in this example the available data would be mapped to object properties:
+  // $record->nid, $record->title, $record->created
+
+   $key_string = $record->bike_make . "-" . $record->bike_model . " (SN=" . $record->serial_number . ")";
+   $bikelist[$key_string] = $record->serial_number;
+
+#array_push($bikelist, $record->serial_number);
+
+
+}
+
+
+
+#$bikelist =  array("BikeA", "Bike2", "Bike3");
+
+
+return $bikelist;
+}
+
+?>

@@ -1,0 +1,4 @@
+name = Custom Webform Pre Built list of Roles
+description = Example to show how to user webform pre built lists.
+core = 6.x
+dependencies[] = webform
